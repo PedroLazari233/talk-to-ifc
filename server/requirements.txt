@@ -1,0 +1,6 @@
+# Python side: server.py (IFC + sandbox + example search) and build_index.py
+# install:  pip install -r server/requirements.txt
+ifcopenshell>=0.8
+flask>=3.0
+numpy
+sentence-transformers>=3.0

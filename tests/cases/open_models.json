@@ -1,0 +1,1615 @@
+{
+ "ifc_files": [
+  "Duplex.ifc",
+  "Building-Architecture.ifc",
+  "Building-Structural.ifc",
+  "Building-Hvac.ifc",
+  "wall-with-opening-and-window.ifc",
+  "Infra-Bridge.ifc",
+  "Infra-Road.ifc",
+  "Schependomlaan.ifc"
+ ],
+ "cases": [
+  {
+   "id": "duplex-count-doors",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many doors are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
+   "expected": 14,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-count-windows",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many windows does the building have?",
+   "reference_code": "result = len(model.by_type(\"IfcWindow\"))",
+   "expected": 24,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-count-walls",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many walls are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 57,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-count-spaces",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many rooms (IfcSpace) are there?",
+   "reference_code": "result = len(model.by_type(\"IfcSpace\"))",
+   "expected": 21,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-count-furniture",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many pieces of furniture are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcFurnishingElement\"))",
+   "expected": 61,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-count-openings",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many opening elements are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcOpeningElement\"))",
+   "expected": 50,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-exists-columns",
+   "ifc_file": "Duplex.ifc",
+   "category": "exists",
+   "question": "Does the model contain any columns?",
+   "reference_code": "result = len(model.by_type(\"IfcColumn\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-exists-roof",
+   "ifc_file": "Duplex.ifc",
+   "category": "exists",
+   "question": "Is there a roof in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcRoof\")) > 0",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-list-storeys",
+   "ifc_file": "Duplex.ifc",
+   "category": "list",
+   "question": "List the names of all building storeys.",
+   "reference_code": "result = [s.Name for s in model.by_type(\"IfcBuildingStorey\")]",
+   "expected": [
+    "Level 1",
+    "Level 2",
+    "T/FDN",
+    "Roof"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-list-stairs",
+   "ifc_file": "Duplex.ifc",
+   "category": "list",
+   "question": "List the names of the stairs.",
+   "reference_code": "result = [s.Name for s in model.by_type(\"IfcStair\")]",
+   "expected": [
+    "Stair:Residential - 200mm Max Riser 250mm Tread:151086",
+    "Stair:Residential - 200mm Max Riser 250mm Tread:198878"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-external-doors",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "How many doors are external (IsExternal is true in Pset_DoorCommon)?",
+   "reference_code": "result = len([d for d in model.by_type(\"IfcDoor\") if get_psets(d).get(\"Pset_DoorCommon\", {}).get(\"IsExternal\") is True])",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-external-doors-natural",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "How many external doors are there?",
+   "reference_code": "result = len([d for d in model.by_type(\"IfcDoor\") if get_psets(d).get(\"Pset_DoorCommon\", {}).get(\"IsExternal\") is True])",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-loadbearing-walls",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "How many walls are load-bearing according to Pset_WallCommon?",
+   "reference_code": "result = len([w for w in model.by_type(\"IfcWall\") if get_psets(w).get(\"Pset_WallCommon\", {}).get(\"LoadBearing\") is True])",
+   "expected": 7,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-internal-wall-names",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "List the distinct Reference values in Pset_WallCommon of the walls that are not external.",
+   "reference_code": "result = sorted(set(get_psets(w).get(\"Pset_WallCommon\", {}).get(\"Reference\") for w in model.by_type(\"IfcWall\") if get_psets(w).get(\"Pset_WallCommon\", {}).get(\"IsExternal\") is False))",
+   "expected": [
+    "Basic Wall:Interior - Furring (152 mm Stud)",
+    "Basic Wall:Interior - Furring (38 mm Stud)",
+    "Basic Wall:Interior - Partition (92mm Stud)",
+    "Basic Wall:Interior - Plumbing (152mm Stud)"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-stair-risers",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "What is the NumberOfRiser of each stair in Pset_StairCommon? Return a list with one value per stair.",
+   "reference_code": "result = [get_psets(s).get(\"Pset_StairCommon\", {}).get(\"NumberOfRiser\") for s in model.by_type(\"IfcStair\")]",
+   "expected": [
+    16,
+    16
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-total-risers",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the total number of risers of all stairs (NumberOfRiser in Pset_StairCommon)?",
+   "reference_code": "result = sum(get_psets(s).get(\"Pset_StairCommon\", {}).get(\"NumberOfRiser\", 0) for s in model.by_type(\"IfcStair\"))",
+   "expected": 32,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-space-area",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the total area of all spaces, using the Area value in PSet_Revit_Dimensions?",
+   "reference_code": "result = sum(get_psets(s).get(\"PSet_Revit_Dimensions\", {}).get(\"Area\", 0) for s in model.by_type(\"IfcSpace\"))",
+   "expected": 422.04656639999854,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-roof-area",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the TotalArea of the roof in Pset_RoofCommon?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcRoof\")[0]).get(\"Pset_RoofCommon\", {}).get(\"TotalArea\")",
+   "expected": 132.9260359799997,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-avg-slab-volume",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the average Volume of the slabs, from PSet_Revit_Dimensions?",
+   "reference_code": "values = [get_psets(s).get(\"PSet_Revit_Dimensions\", {}).get(\"Volume\") for s in model.by_type(\"IfcSlab\")]\nvalues = [v for v in values if v is not None]\nresult = sum(values) / len(values)",
+   "expected": 3.2291543246535057,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-largest-space",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the name of the largest room by Area in PSet_Revit_Dimensions?",
+   "reference_code": "spaces = model.by_type(\"IfcSpace\")\nresult = max(spaces, key=lambda s: get_psets(s).get(\"PSet_Revit_Dimensions\", {}).get(\"Area\", 0)).Name",
+   "expected": "R301",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-guid-door-name",
+   "ifc_file": "Duplex.ifc",
+   "category": "by_guid",
+   "question": "What is the name of the element with GlobalId 1hOSvn6df7F8_7GcBWlRGQ?",
+   "reference_code": "hits = [x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"1hOSvn6df7F8_7GcBWlRGQ\"]\nresult = hits[0].Name",
+   "expected": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-guid-type",
+   "ifc_file": "Duplex.ifc",
+   "category": "by_guid",
+   "question": "What IFC type is the element with GlobalId 2OrWItJ6zAwBNp0OUxK_l8?",
+   "reference_code": "hits = [x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"2OrWItJ6zAwBNp0OUxK_l8\"]\nresult = hits[0].is_a()",
+   "expected": "IfcBeam",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-guid-exists",
+   "ifc_file": "Duplex.ifc",
+   "category": "by_guid",
+   "question": "Does an element with GlobalId 2O2Fr$t4X7Zf8NOew3FNr2 exist in the model?",
+   "reference_code": "result = len([x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"2O2Fr$t4X7Zf8NOew3FNr2\"]) > 0",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-guid-exists-type",
+   "ifc_file": "Duplex.ifc",
+   "category": "by_guid",
+   "question": "What IFC type is the element 2O2Fr$t4X7Zf8NOew3FNr2?",
+   "reference_code": "result = [x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"2O2Fr$t4X7Zf8NOew3FNr2\"][0].is_a()",
+   "expected": "IfcWallStandardCase",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-guid-missing",
+   "ifc_file": "Duplex.ifc",
+   "category": "by_guid",
+   "question": "Does an element with GlobalId 3aB7Kp9Lm2Qx4Rt6Uv8Wz1 exist in the model?",
+   "reference_code": "result = len([x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"3aB7Kp9Lm2Qx4Rt6Uv8Wz1\"]) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-pct-external-doors",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What percentage of the doors are external (IsExternal in Pset_DoorCommon)? Round to one decimal.",
+   "reference_code": "doors = model.by_type(\"IfcDoor\")\nexternal = [d for d in doors if get_psets(d).get(\"Pset_DoorCommon\", {}).get(\"IsExternal\") is True]\nresult = round(100 * len(external) / len(doors), 1)",
+   "expected": 28.6,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-top3-rooms",
+   "ifc_file": "Duplex.ifc",
+   "category": "sorting",
+   "question": "List the names of the 3 largest rooms by Area in PSet_Revit_Dimensions.",
+   "reference_code": "spaces = sorted(model.by_type(\"IfcSpace\"), key=lambda s: get_psets(s).get(\"PSet_Revit_Dimensions\", {}).get(\"Area\", 0), reverse=True)\nresult = [s.Name for s in spaces[:3]]",
+   "expected": [
+    "R301",
+    "B102",
+    "A102"
+   ],
+   "compare": "unordered"
+  },
+  {
+   "id": "duplex-level1-per-type",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "How many elements of each IFC type are contained in Level 1? Give a count per type.",
+   "reference_code": "storey = [s for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"Level 1\"][0]\ncontained = [e for rel in storey.ContainsElements for e in rel.RelatedElements]\ncounts = {}\nfor e in contained:\n    counts[e.is_a()] = counts.get(e.is_a(), 0) + 1\nresult = counts",
+   "expected": {
+    "IfcBeam": 4,
+    "IfcCovering": 5,
+    "IfcDoor": 6,
+    "IfcSlab": 10,
+    "IfcStair": 2,
+    "IfcWallStandardCase": 21,
+    "IfcWindow": 4
+   },
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-roof-windows",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "How many windows are on the Roof storey?",
+   "reference_code": "storey = [s for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"Roof\"][0]\ncontained = [e for rel in storey.ContainsElements for e in rel.RelatedElements]\nresult = len([e for e in contained if e.is_a(\"IfcWindow\")])",
+   "expected": 2,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-level2-elevation",
+   "ifc_file": "Duplex.ifc",
+   "category": "attribute",
+   "question": "What is the Elevation attribute of the storey Level 2?",
+   "reference_code": "result = [s.Elevation for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"Level 2\"][0]",
+   "expected": 3.100000000000378,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-all-windows-external",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "Are all windows external according to Pset_WindowCommon?",
+   "reference_code": "result = all(get_psets(w).get(\"Pset_WindowCommon\", {}).get(\"IsExternal\") is True for w in model.by_type(\"IfcWindow\"))",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-railing-length",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the total Length of all railings, using PSet_Revit_Dimensions?",
+   "reference_code": "result = sum(get_psets(r).get(\"PSet_Revit_Dimensions\", {}).get(\"Length\", 0) for r in model.by_type(\"IfcRailing\"))",
+   "expected": 26.15737139332044,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-exterior-walls-text",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_filter",
+   "question": "How many walls have the word 'Exterior' in their Pset_WallCommon Reference?",
+   "reference_code": "result = len([w for w in model.by_type(\"IfcWall\") if \"Exterior\" in (get_psets(w).get(\"Pset_WallCommon\", {}).get(\"Reference\") or \"\")])",
+   "expected": 12,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-frequent-door-types",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "Which door ObjectType values appear more than 3 times? List them.",
+   "reference_code": "counts = {}\nfor d in model.by_type(\"IfcDoor\"):\n    counts[d.ObjectType] = counts.get(d.ObjectType, 0) + 1\nresult = sorted(t for t, n in counts.items() if n > 3)",
+   "expected": [
+    "0762 x 2032mm",
+    "0864 x 2032mm"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-doors-level2",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "How many doors are on Level 2?",
+   "reference_code": "storey = [s for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"Level 2\"][0]\ncontained = [e for rel in storey.ContainsElements for e in rel.RelatedElements]\nresult = len([e for e in contained if e.is_a(\"IfcDoor\")])",
+   "expected": 8,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-storey-most-windows",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "Which storey contains the most windows? Answer with the storey name.",
+   "reference_code": "best = None\nbest_count = -1\nfor s in model.by_type(\"IfcBuildingStorey\"):\n    n = len([e for rel in s.ContainsElements for e in rel.RelatedElements if e.is_a(\"IfcWindow\")])\n    if n > best_count:\n        best, best_count = s.Name, n\nresult = best",
+   "expected": "Level 2",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-roof-storey",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "On which storey is the roof? Answer with the storey name.",
+   "reference_code": "roof = model.by_type(\"IfcRoof\")[0]\nresult = roof.ContainedInStructure[0].RelatingStructure.Name",
+   "expected": "Roof",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-footings-storey",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "How many footings are contained in the storey T/FDN?",
+   "reference_code": "storey = [s for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"T/FDN\"][0]\ncontained = [e for rel in storey.ContainsElements for e in rel.RelatedElements]\nresult = len([e for e in contained if e.is_a(\"IfcFooting\")])",
+   "expected": 7,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-floor-slabs",
+   "ifc_file": "Duplex.ifc",
+   "category": "attribute",
+   "question": "How many slabs have the PredefinedType FLOOR?",
+   "reference_code": "result = len([s for s in model.by_type(\"IfcSlab\") if s.PredefinedType == \"FLOOR\"])",
+   "expected": 20,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-door-objecttypes",
+   "ifc_file": "Duplex.ifc",
+   "category": "attribute",
+   "question": "List the distinct ObjectType values of the doors.",
+   "reference_code": "result = sorted(set(d.ObjectType for d in model.by_type(\"IfcDoor\")))",
+   "expected": [
+    "0762 x 2032mm",
+    "0813 x 2420mm",
+    "0864 x 2032mm",
+    "1250mm x 2010mm"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-beam-material",
+   "ifc_file": "Duplex.ifc",
+   "category": "material",
+   "question": "Which material is assigned to the beams? Give the material name.",
+   "reference_code": "names = set()\nfor e in model.by_type(\"IfcBeam\"):\n    for rel in e.HasAssociations:\n        if rel.is_a(\"IfcRelAssociatesMaterial\") and rel.RelatingMaterial.is_a(\"IfcMaterial\"):\n            names.add(rel.RelatingMaterial.Name)\nresult = sorted(names)",
+   "expected": [
+    "Metal - Steel - 345 MPa"
+   ],
+   "compare": "contains"
+  },
+  {
+   "id": "duplex-unnamed",
+   "ifc_file": "Duplex.ifc",
+   "category": "validation",
+   "question": "How many elements (IfcElement) have no name?",
+   "reference_code": "result = len([e for e in model.by_type(\"IfcElement\") if not e.Name])",
+   "expected": 2,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-dupes",
+   "ifc_file": "Duplex.ifc",
+   "category": "validation",
+   "question": "Are there any duplicated GlobalIds in the file?",
+   "reference_code": "result = len(duplicate_guids()) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-building-name",
+   "ifc_file": "Duplex.ifc",
+   "category": "validation",
+   "question": "Does the building (IfcBuilding) have a name?",
+   "reference_code": "result = bool(model.by_type(\"IfcBuilding\")[0].Name)",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-project-name",
+   "ifc_file": "Duplex.ifc",
+   "category": "metadata",
+   "question": "What is the name of the project?",
+   "reference_code": "result = model.by_type(\"IfcProject\")[0].Name",
+   "expected": "0001",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-schema",
+   "ifc_file": "Duplex.ifc",
+   "category": "metadata",
+   "question": "Which IFC schema version is this file?",
+   "reference_code": "result = model.schema",
+   "expected": "IFC2X3",
+   "compare": "contains"
+  },
+  {
+   "id": "duplex-numberofstoreys",
+   "ifc_file": "Duplex.ifc",
+   "category": "metadata",
+   "question": "What is the NumberOfStoreys value in the building's Pset_BuildingCommon?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcBuilding\")[0]).get(\"Pset_BuildingCommon\", {}).get(\"NumberOfStoreys\")",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-roof-reference",
+   "ifc_file": "Duplex.ifc",
+   "category": "property_value",
+   "question": "What is the Reference of the roof in Pset_RoofCommon?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcRoof\")[0]).get(\"Pset_RoofCommon\", {}).get(\"Reference\")",
+   "expected": "Basic Roof:Live Roof over Wood Joist Flat Roof",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-compare-windows-doors",
+   "ifc_file": "Duplex.ifc",
+   "category": "compare",
+   "question": "Are there more windows than doors?",
+   "reference_code": "result = len(model.by_type(\"IfcWindow\")) > len(model.by_type(\"IfcDoor\"))",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-compare-beams-footings",
+   "ifc_file": "Duplex.ifc",
+   "category": "compare",
+   "question": "Which is there more of, beams or footings? Answer with the IFC type name.",
+   "reference_code": "b = len(model.by_type(\"IfcBeam\"))\nf = len(model.by_type(\"IfcFooting\"))\nresult = \"IfcBeam\" if b > f else (\"IfcFooting\" if f > b else \"equal\")",
+   "expected": "IfcBeam",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-multi-counts",
+   "ifc_file": "Duplex.ifc",
+   "category": "multi",
+   "question": "How many doors, windows and spaces are in the model?",
+   "parts": 3,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcDoor\")), \"2\": len(model.by_type(\"IfcWindow\")), \"3\": len(model.by_type(\"IfcSpace\"))}",
+   "expected": {
+    "1": 14,
+    "2": 24,
+    "3": 21
+   },
+   "compare": {
+    "1": "number",
+    "2": "number",
+    "3": "number"
+   }
+  },
+  {
+   "id": "duplex-multi-meta",
+   "ifc_file": "Duplex.ifc",
+   "category": "multi",
+   "question": "What is the project name, which IFC schema does the file use, and how many building storeys are there?",
+   "parts": 3,
+   "reference_code": "result = {\"1\": model.by_type(\"IfcProject\")[0].Name, \"2\": model.schema, \"3\": len(model.by_type(\"IfcBuildingStorey\"))}",
+   "expected": {
+    "1": "0001",
+    "2": "IFC2X3",
+    "3": 4
+   },
+   "compare": {
+    "1": "auto",
+    "2": "contains",
+    "3": "number"
+   }
+  },
+  {
+   "id": "duplex-multi-list-count",
+   "ifc_file": "Duplex.ifc",
+   "category": "multi",
+   "question": "List the storey names and tell me how many pieces of furniture there are.",
+   "parts": 2,
+   "reference_code": "result = {\"1\": [s.Name for s in model.by_type(\"IfcBuildingStorey\")], \"2\": len(model.by_type(\"IfcFurnishingElement\"))}",
+   "expected": {
+    "1": [
+     "Level 1",
+     "Level 2",
+     "T/FDN",
+     "Roof"
+    ],
+    "2": 61
+   },
+   "compare": {
+    "1": "auto",
+    "2": "number"
+   }
+  },
+  {
+   "id": "duplex-multi-mixed",
+   "ifc_file": "Duplex.ifc",
+   "category": "multi",
+   "question": "Is there a roof, how many stairs are there, what is the total number of risers in Pset_StairCommon, and how many railings are there?",
+   "parts": 4,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcRoof\")) > 0, \"2\": len(model.by_type(\"IfcStair\")), \"3\": sum(get_psets(s).get(\"Pset_StairCommon\", {}).get(\"NumberOfRiser\", 0) for s in model.by_type(\"IfcStair\")), \"4\": len(model.by_type(\"IfcRailing\"))}",
+   "expected": {
+    "1": true,
+    "2": 2,
+    "3": 32,
+    "4": 4
+   },
+   "compare": {
+    "1": "auto",
+    "2": "number",
+    "3": "number",
+    "4": "number"
+   }
+  },
+  {
+   "id": "duplex-messy-windows",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "how many windos does this hous have",
+   "reference_code": "result = len(model.by_type(\"IfcWindow\"))",
+   "expected": 24,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-messy-roof",
+   "ifc_file": "Duplex.ifc",
+   "category": "spatial",
+   "question": "wich storey is the roof on??",
+   "reference_code": "roof = model.by_type(\"IfcRoof\")[0]\nresult = roof.ContainedInStructure[0].RelatingStructure.Name",
+   "expected": "Roof",
+   "compare": "auto"
+  },
+  {
+   "id": "duplex-messy-dors",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "number of dors pls",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
+   "expected": 14,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-refuse-delete",
+   "ifc_file": "Duplex.ifc",
+   "category": "out_of_scope",
+   "question": "delete all the furniture from this model",
+   "expect_refusal": true
+  },
+  {
+   "id": "duplex-refuse-export",
+   "ifc_file": "Duplex.ifc",
+   "category": "out_of_scope",
+   "question": "export the list of doors to an Excel file",
+   "expect_refusal": true
+  },
+  {
+   "id": "duplex-refuse-joke",
+   "ifc_file": "Duplex.ifc",
+   "category": "out_of_scope",
+   "question": "tell me a joke about architects",
+   "expect_refusal": true
+  },
+  {
+   "id": "arch-count-walls",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "How many walls are there?",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "arch-count-slabs",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "How many slabs are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcSlab\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "arch-count-sites",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "How many sites does the file have?",
+   "reference_code": "result = len(model.by_type(\"IfcSite\"))",
+   "expected": 2,
+   "compare": "number"
+  },
+  {
+   "id": "arch-count-zones",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "How many spatial zones (IfcSpatialZone) are there?",
+   "reference_code": "result = len(model.by_type(\"IfcSpatialZone\"))",
+   "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "arch-types",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "list",
+   "question": "List each type of physical element (IfcElement) in the model once.",
+   "reference_code": "result = sorted(set(e.is_a() for e in model.by_type(\"IfcElement\")))",
+   "expected": [
+    "IfcBuildingElementProxy",
+    "IfcChimney",
+    "IfcFurniture",
+    "IfcRoof",
+    "IfcSlab",
+    "IfcWall"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-space-names",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "list",
+   "question": "List the names of the spaces.",
+   "reference_code": "result = [s.Name for s in model.by_type(\"IfcSpace\")]",
+   "expected": [
+    "living room",
+    "entry hall"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-proxy-names",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "list",
+   "question": "List the names of the building element proxies.",
+   "reference_code": "result = [p.Name for p in model.by_type(\"IfcBuildingElementProxy\")]",
+   "expected": [
+    "sand bedding",
+    "origin",
+    "geo-reference"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-exists-furniture",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "exists",
+   "question": "Is there any furniture in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcFurniture\")) > 0",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "arch-exists-doors",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "exists",
+   "question": "Does the house have any doors?",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "arch-wall-volume",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "aggregate",
+   "question": "What is the total NetVolume of the walls from Qto_WallBaseQuantities?",
+   "reference_code": "result = sum(get_psets(w).get(\"Qto_WallBaseQuantities\", {}).get(\"NetVolume\", 0) for w in model.by_type(\"IfcWall\"))",
+   "expected": 7.4504681883796495,
+   "compare": "number"
+  },
+  {
+   "id": "arch-longest-wall",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "aggregate",
+   "question": "What is the longest wall Length in Qto_WallBaseQuantities?",
+   "reference_code": "result = max(get_psets(w).get(\"Qto_WallBaseQuantities\", {}).get(\"Length\", 0) for w in model.by_type(\"IfcWall\"))",
+   "expected": 6000.0,
+   "compare": "number"
+  },
+  {
+   "id": "arch-slab-area",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "aggregate",
+   "question": "What is the total NetArea of all slabs in Qto_SlabBaseQuantities?",
+   "reference_code": "result = sum(get_psets(s).get(\"Qto_SlabBaseQuantities\", {}).get(\"NetArea\", 0) for s in model.by_type(\"IfcSlab\"))",
+   "expected": 79.3628361495379,
+   "compare": "number"
+  },
+  {
+   "id": "arch-slab-firerating",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "property_value",
+   "question": "What are the distinct FireRating values of the slabs in Pset_SlabCommon?",
+   "reference_code": "result = sorted(set(get_psets(s).get(\"Pset_SlabCommon\", {}).get(\"FireRating\") for s in model.by_type(\"IfcSlab\") if \"FireRating\" in get_psets(s).get(\"Pset_SlabCommon\", {})))",
+   "expected": [
+    "REI30"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-external-slabs",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "property_filter",
+   "question": "How many slabs are marked as external in Pset_SlabCommon?",
+   "reference_code": "result = len([s for s in model.by_type(\"IfcSlab\") if get_psets(s).get(\"Pset_SlabCommon\", {}).get(\"IsExternal\") is True])",
+   "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "arch-walls-no-pset",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "property_missing",
+   "question": "How many walls have no Pset_WallCommon property set?",
+   "reference_code": "result = len([w for w in model.by_type(\"IfcWall\") if \"Pset_WallCommon\" not in get_psets(w)])",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "arch-chimney-description",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "attribute",
+   "question": "What is the description of the chimney?",
+   "reference_code": "result = model.by_type(\"IfcChimney\")[0].Description",
+   "expected": "A chimney, standing tall and proud, guiding smoke away from the home.",
+   "compare": "auto"
+  },
+  {
+   "id": "arch-roof-objecttype",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "attribute",
+   "question": "What is the ObjectType of the roof?",
+   "reference_code": "result = model.by_type(\"IfcRoof\")[0].ObjectType",
+   "expected": "gable_roof",
+   "compare": "auto"
+  },
+  {
+   "id": "arch-wall-material",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "material",
+   "question": "Which materials are assigned to the walls? List the distinct material names.",
+   "reference_code": "names = set()\nfor e in model.by_type(\"IfcWall\"):\n    for rel in e.HasAssociations:\n        if rel.is_a(\"IfcRelAssociatesMaterial\") and rel.RelatingMaterial.is_a(\"IfcMaterial\"):\n            names.add(rel.RelatingMaterial.Name)\nresult = sorted(names)",
+   "expected": [
+    "gypsum_fiber-board_panel",
+    "stone_sand-lime"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-wall-names-sorted",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "sorting",
+   "question": "List the names of the walls in alphabetical order.",
+   "reference_code": "result = sorted(w.Name for w in model.by_type(\"IfcWall\"))",
+   "expected": [
+    "house - outer wall - house left",
+    "house - outer wall - house right back",
+    "house - outer wall - house right front",
+    "plumbing wall"
+   ],
+   "compare": "exact"
+  },
+  {
+   "id": "arch-slab-depths",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "property_value",
+   "question": "What are the distinct Depth values of the slabs in Qto_SlabBaseQuantities?",
+   "reference_code": "result = sorted(set(get_psets(s).get(\"Qto_SlabBaseQuantities\", {}).get(\"Depth\") for s in model.by_type(\"IfcSlab\") if \"Depth\" in get_psets(s).get(\"Qto_SlabBaseQuantities\", {})))",
+   "expected": [
+    250.0,
+    300.0
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "arch-building-name",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "metadata",
+   "question": "What is the name of the building?",
+   "reference_code": "result = model.by_type(\"IfcBuilding\")[0].Name",
+   "expected": "Single-family house",
+   "compare": "auto"
+  },
+  {
+   "id": "arch-groundfloor-count",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "spatial",
+   "question": "How many elements are contained in the storey '00 groundfloor'?",
+   "reference_code": "storey = [s for s in model.by_type(\"IfcBuildingStorey\") if s.Name == \"00 groundfloor\"][0]\ncontained = [e for rel in storey.ContainsElements for e in rel.RelatedElements]\nresult = len(contained)",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "arch-guid-name",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "by_guid",
+   "question": "What is the name of the element with GlobalId 1AQAupaRP1txwK1AGiN61V?",
+   "reference_code": "hits = [x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"1AQAupaRP1txwK1AGiN61V\"]\nresult = hits[0].Name",
+   "expected": "house - outer wall - house right front",
+   "compare": "auto"
+  },
+  {
+   "id": "arch-compare-slabs-walls",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "compare",
+   "question": "Are there more slabs than walls?",
+   "reference_code": "result = len(model.by_type(\"IfcSlab\")) > len(model.by_type(\"IfcWall\"))",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "arch-multi",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "multi",
+   "question": "How many walls and how many slabs are there, and what is the total wall NetVolume in Qto_WallBaseQuantities?",
+   "parts": 3,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcWall\")), \"2\": len(model.by_type(\"IfcSlab\")), \"3\": sum(get_psets(w).get(\"Qto_WallBaseQuantities\", {}).get(\"NetVolume\", 0) for w in model.by_type(\"IfcWall\"))}",
+   "expected": {
+    "1": 4,
+    "2": 3,
+    "3": 7.4504681883796495
+   },
+   "compare": {
+    "1": "number",
+    "2": "number",
+    "3": "number"
+   }
+  },
+  {
+   "id": "arch-messy-walls",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "how many wals in this model",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "arch-refuse-rename",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "out_of_scope",
+   "question": "rename the storey 00 groundfloor to Ground Floor",
+   "expect_refusal": true
+  },
+  {
+   "id": "struct-count-beams",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "count",
+   "question": "How many beams are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcBeam\"))",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "struct-count-footings",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "count",
+   "question": "How many footings are there?",
+   "reference_code": "result = len(model.by_type(\"IfcFooting\"))",
+   "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "struct-exists-columns",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "exists",
+   "question": "Are there any columns?",
+   "reference_code": "result = len(model.by_type(\"IfcColumn\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "struct-beam-volume",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "aggregate",
+   "question": "What is the total NetVolume of all beams in Qto_BeamBaseQuantities?",
+   "reference_code": "result = sum(get_psets(b).get(\"Qto_BeamBaseQuantities\", {}).get(\"NetVolume\", 0) for b in model.by_type(\"IfcBeam\"))",
+   "expected": 0.4940000000000069,
+   "compare": "number"
+  },
+  {
+   "id": "struct-longest-beam",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "aggregate",
+   "question": "What is the Length of the longest beam in Qto_BeamBaseQuantities?",
+   "reference_code": "result = max(get_psets(b).get(\"Qto_BeamBaseQuantities\", {}).get(\"Length\", 0) for b in model.by_type(\"IfcBeam\"))",
+   "expected": 5800.0,
+   "compare": "number"
+  },
+  {
+   "id": "struct-avg-cross-section",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "aggregate",
+   "question": "What is the average CrossSectionArea of the beams in Qto_BeamBaseQuantities?",
+   "reference_code": "values = [get_psets(b).get(\"Qto_BeamBaseQuantities\", {}).get(\"CrossSectionArea\") for b in model.by_type(\"IfcBeam\")]\nvalues = [v for v in values if v is not None]\nresult = sum(values) / len(values)",
+   "expected": 0.020000000000000493,
+   "compare": "number"
+  },
+  {
+   "id": "struct-beam-material",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "material",
+   "question": "What material are the beams made of? Give the material name.",
+   "reference_code": "names = set()\nfor e in model.by_type(\"IfcBeam\"):\n    for rel in e.HasAssociations:\n        if rel.is_a(\"IfcRelAssociatesMaterial\") and rel.RelatingMaterial.is_a(\"IfcMaterial\"):\n            names.add(rel.RelatingMaterial.Name)\nresult = sorted(names)",
+   "expected": [
+    "wood_spruce_beam"
+   ],
+   "compare": "contains"
+  },
+  {
+   "id": "struct-footing-objecttype",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "attribute",
+   "question": "What is the ObjectType of the footing?",
+   "reference_code": "result = model.by_type(\"IfcFooting\")[0].ObjectType",
+   "expected": "strip_footing",
+   "compare": "auto"
+  },
+  {
+   "id": "struct-accessory-names",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "list",
+   "question": "List the names of the discrete accessories.",
+   "reference_code": "result = [a.Name for a in model.by_type(\"IfcDiscreteAccessory\")]",
+   "expected": [
+    "beam shoe",
+    "beam shoe"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "struct-beam-objecttypes",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "attribute",
+   "question": "List the distinct ObjectType values of the beams.",
+   "reference_code": "result = sorted(set(b.ObjectType for b in model.by_type(\"IfcBeam\")))",
+   "expected": [
+    "girder_segment"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "struct-guid-objecttype",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "by_guid",
+   "question": "What is the ObjectType of the element with GlobalId 0fqX614OH1YO1Njdxms2$Q?",
+   "reference_code": "hits = [x for x in model.by_type(\"IfcRoot\") if x.GlobalId == \"0fqX614OH1YO1Njdxms2$Q\"]\nresult = hits[0].ObjectType",
+   "expected": "girder_segment",
+   "compare": "auto"
+  },
+  {
+   "id": "struct-compare",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "compare",
+   "question": "Which has more elements, beams or walls? Answer with the IFC type name.",
+   "reference_code": "b = len(model.by_type(\"IfcBeam\"))\nw = len(model.by_type(\"IfcWall\"))\nresult = \"IfcBeam\" if b > w else (\"IfcWall\" if w > b else \"equal\")",
+   "expected": "IfcBeam",
+   "compare": "auto"
+  },
+  {
+   "id": "struct-multi",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "multi",
+   "question": "How many beams, walls and footings are there?",
+   "parts": 3,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcBeam\")), \"2\": len(model.by_type(\"IfcWall\")), \"3\": len(model.by_type(\"IfcFooting\"))}",
+   "expected": {
+    "1": 6,
+    "2": 4,
+    "3": 1
+   },
+   "compare": {
+    "1": "number",
+    "2": "number",
+    "3": "number"
+   }
+  },
+  {
+   "id": "struct-messy-beams",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "count",
+   "question": "hw many beems r there",
+   "reference_code": "result = len(model.by_type(\"IfcBeam\"))",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "hvac-count-terminals",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "count",
+   "question": "How many air terminals are there?",
+   "reference_code": "result = len(model.by_type(\"IfcAirTerminal\"))",
+   "expected": 2,
+   "compare": "number"
+  },
+  {
+   "id": "hvac-exists-duct",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "exists",
+   "question": "Is there any duct segment in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcDuctSegment\")) > 0",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "hvac-exists-pipes",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "exists",
+   "question": "Are there any pipe segments?",
+   "reference_code": "result = len(model.by_type(\"IfcPipeSegment\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "hvac-terminal-names",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "list",
+   "question": "List the names of the air terminals.",
+   "reference_code": "result = [t.Name for t in model.by_type(\"IfcAirTerminal\")]",
+   "expected": [
+    "chimney cover",
+    "house fireplace cap"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "hvac-duct-objecttype",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "attribute",
+   "question": "What is the ObjectType of the duct segment?",
+   "reference_code": "result = model.by_type(\"IfcDuctSegment\")[0].ObjectType",
+   "expected": "rigidsegment",
+   "compare": "auto"
+  },
+  {
+   "id": "hvac-distribution-count",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "count",
+   "question": "How many distribution elements (IfcDistributionElement) are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcDistributionElement\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "hvac-terminal-storey",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "spatial",
+   "question": "In which storey are the air terminals? Answer with the storey name.",
+   "reference_code": "names = set()\nfor t in model.by_type(\"IfcAirTerminal\"):\n    for rel in t.ContainedInStructure:\n        names.add(rel.RelatingStructure.Name)\nresult = sorted(names)",
+   "expected": [
+    "00 groundfloor"
+   ],
+   "compare": "contains"
+  },
+  {
+   "id": "hvac-multi",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "multi",
+   "question": "How many air terminals and how many duct segments are there?",
+   "parts": 2,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcAirTerminal\")), \"2\": len(model.by_type(\"IfcDuctSegment\"))}",
+   "expected": {
+    "1": 2,
+    "2": 1
+   },
+   "compare": {
+    "1": "number",
+    "2": "number"
+   }
+  },
+  {
+   "id": "hvac-refuse-weather",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "out_of_scope",
+   "question": "what's the weather going to be like this weekend?",
+   "expect_refusal": true
+  },
+  {
+   "id": "ww-count-elements",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "count",
+   "question": "How many elements (IfcElement) are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcElement\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "ww-wall-uvalue",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "property_value",
+   "question": "What is the ThermalTransmittance of the wall?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcWall\")[0]).get(\"Pset_WallCommon\", {}).get(\"ThermalTransmittance\")",
+   "expected": 0.24,
+   "compare": "number"
+  },
+  {
+   "id": "ww-window-external",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "property_value",
+   "question": "Is the window external?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcWindow\")[0]).get(\"Pset_WindowCommon\", {}).get(\"IsExternal\")",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "ww-window-glazing",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "property_value",
+   "question": "What is the GlazingAreaFraction of the window?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcWindow\")[0]).get(\"Pset_WindowCommon\", {}).get(\"GlazingAreaFraction\")",
+   "expected": 0.7,
+   "compare": "number"
+  },
+  {
+   "id": "ww-wall-loadbearing",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "property_value",
+   "question": "Is the wall load-bearing?",
+   "reference_code": "result = get_psets(model.by_type(\"IfcWall\")[0]).get(\"Pset_WallCommon\", {}).get(\"LoadBearing\")",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "ww-wall-firerating",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "property_missing",
+   "question": "Does the wall have a FireRating? Answer true only if FireRating in Pset_WallCommon is a non-empty text.",
+   "reference_code": "result = bool(get_psets(model.by_type(\"IfcWall\")[0]).get(\"Pset_WallCommon\", {}).get(\"FireRating\"))",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "ww-wall-openings",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "relation",
+   "question": "How many openings does the wall have?",
+   "reference_code": "result = len(model.by_type(\"IfcWall\")[0].HasOpenings)",
+   "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "ww-opening-filler",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "relation",
+   "question": "Which element fills the opening in the wall? Answer with its name.",
+   "reference_code": "names = []\nfor op in model.by_type(\"IfcOpeningElement\"):\n    for rel in op.HasFillings:\n        names.append(rel.RelatedBuildingElement.Name)\nresult = names",
+   "expected": [
+    "Window for Test Example"
+   ],
+   "compare": "contains"
+  },
+  {
+   "id": "ww-wall-description",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "attribute",
+   "question": "What is the description of the wall?",
+   "reference_code": "result = model.by_type(\"IfcWall\")[0].Description",
+   "expected": "Description of Wall",
+   "compare": "auto"
+  },
+  {
+   "id": "ww-storey-name",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "metadata",
+   "question": "What is the name of the building storey?",
+   "reference_code": "result = model.by_type(\"IfcBuildingStorey\")[0].Name",
+   "expected": "Default Building Storey",
+   "compare": "auto"
+  },
+  {
+   "id": "ww-window-material",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "material",
+   "question": "What is the name of the material set assigned to the window?",
+   "reference_code": "names = []\nfor rel in model.by_type(\"IfcWindow\")[0].HasAssociations:\n    if rel.is_a(\"IfcRelAssociatesMaterial\"):\n        names.append(rel.RelatingMaterial.Name)\nresult = names",
+   "expected": [
+    "Constituent Set for Window"
+   ],
+   "compare": "contains"
+  },
+  {
+   "id": "ww-multi",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "multi",
+   "question": "What is the ThermalTransmittance of the wall, and what is the Infiltration value of the window?",
+   "parts": 2,
+   "reference_code": "result = {\"1\": get_psets(model.by_type(\"IfcWall\")[0]).get(\"Pset_WallCommon\", {}).get(\"ThermalTransmittance\"), \"2\": get_psets(model.by_type(\"IfcWindow\")[0]).get(\"Pset_WindowCommon\", {}).get(\"Infiltration\")}",
+   "expected": {
+    "1": 0.24,
+    "2": 0.3
+   },
+   "compare": {
+    "1": "number",
+    "2": "number"
+   }
+  },
+  {
+   "id": "ww-refuse-save",
+   "ifc_file": "wall-with-opening-and-window.ifc",
+   "category": "out_of_scope",
+   "question": "save a copy of this file with the window removed",
+   "expect_refusal": true
+  },
+  {
+   "id": "bridge-count-bridges",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "How many bridges are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcBridge\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-count-parts",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "How many bridge parts are there?",
+   "reference_code": "result = len(model.by_type(\"IfcBridgePart\"))",
+   "expected": 18,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-count-signs",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "How many signs are there?",
+   "reference_code": "result = len(model.by_type(\"IfcSign\"))",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-count-sites",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "How many sites are there?",
+   "reference_code": "result = len(model.by_type(\"IfcSite\"))",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-bridge-names",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "list",
+   "question": "List the names of the bridges.",
+   "reference_code": "result = [b.Name for b in model.by_type(\"IfcBridge\")]",
+   "expected": [
+    "road river bridge",
+    "rail bridge",
+    "rail bridge"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-predefined",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "attribute",
+   "question": "What are the distinct PredefinedType values of the bridges?",
+   "reference_code": "result = sorted(set(b.PredefinedType for b in model.by_type(\"IfcBridge\")))",
+   "expected": [
+    "ARCHED",
+    "GIRDER"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-column-volume",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "aggregate",
+   "question": "What is the total NetVolume of the columns in Qto_ColumnBaseQuantities?",
+   "reference_code": "result = sum(get_psets(c).get(\"Qto_ColumnBaseQuantities\", {}).get(\"NetVolume\", 0) for c in model.by_type(\"IfcColumn\"))",
+   "expected": 113.38187163615511,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-exists-storeys",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "exists",
+   "question": "Does the model contain any building storeys?",
+   "reference_code": "result = len(model.by_type(\"IfcBuildingStorey\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-top-material",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "material",
+   "question": "Which material is assigned to the most elements? Give the material name.",
+   "reference_code": "counts = {}\nfor rel in model.by_type(\"IfcRelAssociatesMaterial\"):\n    mat = rel.RelatingMaterial\n    if mat.is_a(\"IfcMaterial\"):\n        counts[mat.Name] = counts.get(mat.Name, 0) + len(rel.RelatedObjects)\nresult = max(counts, key=lambda k: counts[k])",
+   "expected": "stone_granite_masonry",
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-compare",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "compare",
+   "question": "Are there more beams than columns?",
+   "reference_code": "result = len(model.by_type(\"IfcBeam\")) > len(model.by_type(\"IfcColumn\"))",
+   "expected": true,
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-sign-description",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "attribute",
+   "question": "What is the description of the sign named 'road rail bridge - name sign'?",
+   "reference_code": "result = [s.Description for s in model.by_type(\"IfcSign\") if s.Name == \"road rail bridge - name sign\"][0]",
+   "expected": "Ye Olde Brygge's Timeless Plaque: A Gleaming Tribute to Bygone Eras",
+   "compare": "auto"
+  },
+  {
+   "id": "bridge-multi",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "multi",
+   "question": "How many earthworks fill elements are there, and what are their distinct PredefinedType values?",
+   "parts": 2,
+   "reference_code": "fills = model.by_type(\"IfcEarthworksFill\")\nresult = {\"1\": len(fills), \"2\": sorted(set(f.PredefinedType for f in fills))}",
+   "expected": {
+    "1": 4,
+    "2": [
+     "BACKFILL"
+    ]
+   },
+   "compare": {
+    "1": "number",
+    "2": "auto"
+   }
+  },
+  {
+   "id": "bridge-messy",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "how many briges r in this file",
+   "reference_code": "result = len(model.by_type(\"IfcBridge\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "road-count-parts",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "count",
+   "question": "How many road parts (IfcRoadPart) are there?",
+   "reference_code": "result = len(model.by_type(\"IfcRoadPart\"))",
+   "expected": 26,
+   "compare": "number"
+  },
+  {
+   "id": "road-count-courses",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "count",
+   "question": "How many pavement courses (IfcCourse) are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcCourse\"))",
+   "expected": 16,
+   "compare": "number"
+  },
+  {
+   "id": "road-line-markings",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "attribute",
+   "question": "How many surface features have the PredefinedType LINEMARKING?",
+   "reference_code": "result = len([f for f in model.by_type(\"IfcSurfaceFeature\") if f.PredefinedType == \"LINEMARKING\"])",
+   "expected": 20,
+   "compare": "number"
+  },
+  {
+   "id": "road-road-names",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "list",
+   "question": "List the names of the roads (IfcRoad).",
+   "reference_code": "result = [r.Name for r in model.by_type(\"IfcRoad\")]",
+   "expected": [
+    "road parking - road",
+    "bridge road connection",
+    "bridge road connection",
+    "road",
+    "road"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "road-course-materials",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "material",
+   "question": "Which materials are used by the courses? List the distinct material names.",
+   "reference_code": "names = set()\nfor e in model.by_type(\"IfcCourse\"):\n    for rel in e.HasAssociations:\n        if rel.is_a(\"IfcRelAssociatesMaterial\") and rel.RelatingMaterial.is_a(\"IfcMaterial\"):\n            names.add(rel.RelatingMaterial.Name)\nresult = sorted(names)",
+   "expected": [
+    "bitumen_asphalt_generic",
+    "bitumen_dbm_generic"
+   ],
+   "compare": "auto"
+  },
+  {
+   "id": "road-subgrade-fills",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "attribute",
+   "question": "How many earthworks fills are subgrade (PredefinedType SUBGRADE)?",
+   "reference_code": "result = len([f for f in model.by_type(\"IfcEarthworksFill\") if f.PredefinedType == \"SUBGRADE\"])",
+   "expected": 8,
+   "compare": "number"
+  },
+  {
+   "id": "road-exists-bridge",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "exists",
+   "question": "Is there any bridge in this file?",
+   "reference_code": "result = len(model.by_type(\"IfcBridge\")) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "road-multi",
+   "ifc_file": "Infra-Road.ifc",
+   "category": "multi",
+   "question": "How many roads and how many surface features are there?",
+   "parts": 2,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcRoad\")), \"2\": len(model.by_type(\"IfcSurfaceFeature\"))}",
+   "expected": {
+    "1": 5,
+    "2": 20
+   },
+   "compare": {
+    "1": "number",
+    "2": "number"
+   }
+  },
+  {
+   "id": "schep-count-doors",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many doors are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
+   "expected": 205,
+   "compare": "number"
+  },
+  {
+   "id": "schep-count-walls",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many walls are there?",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 880,
+   "compare": "number"
+  },
+  {
+   "id": "schep-count-coverings",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many coverings are in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcCovering\"))",
+   "expected": 1214,
+   "compare": "number"
+  },
+  {
+   "id": "schep-count-stairs",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many stairs are there?",
+   "reference_code": "result = len(model.by_type(\"IfcStair\"))",
+   "expected": 9,
+   "compare": "number"
+  },
+  {
+   "id": "schep-project",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "metadata",
+   "question": "What is the name of the project?",
+   "reference_code": "result = model.by_type(\"IfcProject\")[0].Name",
+   "expected": "Synchro Project",
+   "compare": "auto"
+  },
+  {
+   "id": "schep-schema",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "metadata",
+   "question": "Which IFC schema is used?",
+   "reference_code": "result = model.schema",
+   "expected": "IFC2X3",
+   "compare": "contains"
+  },
+  {
+   "id": "schep-building",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "metadata",
+   "question": "What is the name of the building?",
+   "reference_code": "result = model.by_type(\"IfcBuilding\")[0].Name",
+   "expected": "Root Resource",
+   "compare": "auto"
+  },
+  {
+   "id": "schep-storeys",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many building storeys are there?",
+   "reference_code": "result = len(model.by_type(\"IfcBuildingStorey\"))",
+   "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "schep-dupes",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "validation",
+   "question": "Are there duplicate GlobalIds?",
+   "reference_code": "result = len(duplicate_guids()) > 0",
+   "expected": false,
+   "compare": "auto"
+  },
+  {
+   "id": "schep-most-common",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "list",
+   "question": "Which type of element (IfcElement subtype) appears most often? Answer with the IFC type name.",
+   "reference_code": "counts = {}\nfor e in model.by_type(\"IfcElement\"):\n    counts[e.is_a()] = counts.get(e.is_a(), 0) + 1\nresult = max(counts, key=lambda k: counts[k])",
+   "expected": "IfcCovering",
+   "compare": "auto"
+  },
+  {
+   "id": "schep-velux",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "property_filter",
+   "question": "How many windows have a name starting with 'velux'?",
+   "reference_code": "result = len([w for w in model.by_type(\"IfcWindow\") if w.Name and w.Name.lower().startswith(\"velux\")])",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "schep-multi",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "multi",
+   "question": "How many windows, doors and railings are there?",
+   "parts": 3,
+   "reference_code": "result = {\"1\": len(model.by_type(\"IfcWindow\")), \"2\": len(model.by_type(\"IfcDoor\")), \"3\": len(model.by_type(\"IfcRailing\"))}",
+   "expected": {
+    "1": 259,
+    "2": 205,
+    "3": 90
+   },
+   "compare": {
+    "1": "number",
+    "2": "number",
+    "3": "number"
+   }
+  },
+  {
+   "id": "schep-refuse-translate",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "out_of_scope",
+   "question": "translate all the element names in this file from Dutch to English",
+   "expect_refusal": true
+  },
+  {
+   "id": "schep-refuse-offtopic",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "out_of_scope",
+   "question": "who won the 2022 World Cup?",
+   "expect_refusal": true
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "ifcfilter",
+  "version": "1.0.0",
+  "description": "Answers natural-language questions about IFC/BIM models: an LLM writes ifcopenshell code, a sandbox runs it",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "server": "python server/server.py",
+    "build-index": "python server/build_index.py",
+    "ask": "node caller.js",
+    "test": "node --test tests/ifc_answers.test.js",
+    "check-cases": "node tests/check_cases.js",
+    "check-retrieval": "python server/check_retrieval.py tests/cases/open_models.json",
+    "download-models": "node tests/download_models.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.2"
+  }
+}
