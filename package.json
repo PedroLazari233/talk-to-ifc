@@ -1,5 +1,5 @@
 {
-  "name": "ifcfilter",
+  "name": "talk-to-ifc",
   "version": "1.0.0",
   "description": "Answers natural-language questions about IFC/BIM models: an LLM writes ifcopenshell code, a sandbox runs it",
   "private": true,
@@ -13,7 +13,7 @@
     "check-retrieval": "python server/check_retrieval.py tests/cases/open_models.json",
     "download-models": "node tests/download_models.js"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^18.0.2"
   }

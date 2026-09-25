@@ -1,4 +1,4 @@
-# IFCFilter
+# talk-to-ifc
 
 Ask questions about an IFC/BIM model in plain language ("how many external doors are on Level 1?")
 and get the answer computed from the file. An LLM writes a few lines of Python (ifcopenshell), a
