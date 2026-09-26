@@ -11,12 +11,9 @@ const SERVER = "http://localhost:5001";
 export const IFC_PATH = process.env.IFC_PATH || "tests/models/Duplex.ifc";
 
 // ---------- which LLM to use: set it in .env, no code changes needed ----------
-// LLM_FORMAT = "openai"    -> any OpenAI-compatible API: Ollama, OpenAI, DeepSeek, Groq, vLLM/RunPod...
-// LLM_FORMAT = "anthropic" -> Claude API
-// defaults = local Ollama with qwen2.5:7b
-export const LLM_FORMAT = (process.env.LLM_FORMAT || "openai").toLowerCase();
-export const LLM_URL = process.env.LLM_URL || "http://localhost:11434/v1/chat/completions";
-export const LLM_MODEL = process.env.LLM_MODEL || "qwen2.5:7b";
+export const LLM_FORMAT = (process.env.LLM_FORMAT || "").toLowerCase();
+export const LLM_URL = process.env.LLM_URL || "";
+export const LLM_MODEL = process.env.LLM_MODEL || "";
 const LLM_API_KEY = process.env.LLM_API_KEY || "";
 // how many times to retry a wrong answer (each retry tells the model what was wrong)
 const LLM_RETRIES = Number(process.env.LLM_RETRIES ?? 2);

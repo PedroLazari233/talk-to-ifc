@@ -9,6 +9,7 @@ __pycache__/
 examples_index.json
 query_log.jsonl
 tests/reports/
+*.log
 
 # downloaded test models (Schependomlaan alone is 65 MB): node tests/download_models.js gets them again
 tests/models/*.ifc

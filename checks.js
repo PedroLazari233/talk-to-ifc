@@ -9,13 +9,13 @@
 // Every real answer has to read the IFC file, so code that never uses "model" is rejected.
 // the answer must be stored in "result" (print() does nothing in the sandbox)
 export function assignsResult(code) {
-  return /\bresult\s*=(?!=)/.test(code);
+  return /\bresult\s*=(?!=)/.test(code); //regex
 }
 
 export function readsModel(code) {
   // the helpers read the file too: result = len(elements_in("Level 1")) never names "model"
   return /\bmodel\b/.test(code) ||
-    /\b(duplicate_guids|elements_in|storey_names|material_names|openings|fillings)\s*\(/.test(code);
+    /\b(duplicate_guids|elements_in|storey_names|material_names|openings|fillings)\s*\(/.test(code); //regex
 }
 
 // ---------- GUIDs ----------
@@ -145,8 +145,8 @@ export function wrongKind(question, answer) {
   if (kind === "count" && !isNumber && !isDict) {
     return `"${question}" asks HOW MANY, so its answer must be a number (e.g. len(...)), but it was ${describe(answer)}.`;
   }
-  if (kind === "yes/no" && isNumber) {
-    // "are there any beams?" -> 0 is a count, not an answer (a list or a text still carries the yes/no)
+  if (kind === "yes/no" && !isBool) {
+    // "are there any beams?" -> 0, [], {}, None are not an answer either: only True/False is
     return `"${question}" is a yes/no question, so answer True or False (e.g. len(...) > 0), not ${describe(answer)}.`;
   }
   if (kind === "number" && !isNumber && answer !== null && answer !== undefined) {
@@ -305,18 +305,63 @@ export function unusedTypes(question, code, productTypes) {
 // ---------- a type counted twice ----------
 // by_type("IfcWall") already returns the subtypes (IfcWallStandardCase...). Even the 27B wrote
 // len(model.by_type("IfcWall")) + len(model.by_type("IfcWallStandardCase")) -> 113 walls instead of 57.
-// Returns [type, subtype] when the code adds a type and one of its subtypes, else null.
+// Haiku made the same mistake two other ways: model.by_type("IfcWall") + model.by_type("IfcWallStandardCase")
+// (concatenating the LISTS) and walls.extend(model.by_type("IfcWallStandardCase")) after
+// walls = model.by_type("IfcWall") - same bug, no len() in sight.
+// Returns [type, subtype] when the code combines a type and one of its subtypes without ever
+// de-duplicating the result, else null.
 export function doubleCounted(code, productTypes) {
   if (!productTypes) return null;
   const byLower = new Map(Object.keys(productTypes).map(t => [t.toLowerCase(), t]));
   const isBelow = (sub, sup) => (productTypes[byLower.get(sub.toLowerCase())] || [])
     .some(t => t.toLowerCase() === sup.toLowerCase());
-  // only counts added up: a list sum (by_type(A) + by_type(B)) may be de-duplicated afterwards, as the 27B did
-  const added = /len\(\s*model\.by_type\(\s*["'](\w+)["']\s*\)\s*\)\s*\+\s*len\(\s*model\.by_type\(\s*["'](\w+)["']/g;
-  for (const [, a, b] of code.matchAll(added)) {
-    if (isBelow(b, a)) return [a, b];
-    if (isBelow(a, b)) return [b, a];
+  const pairOf = (a, b) => (isBelow(b, a) ? [a, b] : isBelow(a, b) ? [b, a] : null);
+
+  // 1. len(by_type(A)) + len(by_type(B)): the two counts are added as plain numbers, no way to
+  //    de-duplicate afterwards - always wrong.
+  const addedLens = /len\(\s*model\.by_type\(\s*["'](\w+)["']\s*\)\s*\)\s*\+\s*len\(\s*model\.by_type\(\s*["'](\w+)["']/g;
+  for (const [, a, b] of code.matchAll(addedLens)) {
+    const pair = pairOf(a, b);
+    if (pair) return pair;
   }
+
+  // a variable is "de-duplicated" if, anywhere later in the code, it is passed through set(...)
+  // or a dict/comprehension keyed by something unique (GlobalId...) - trust that and stay quiet.
+  const isDeduped = varName => new RegExp(
+    `\\bset\\(\\s*${varName}\\b|\\{[^{}]*\\bfor\\b[^{}]*\\bin\\s+${varName}\\b[^{}]*\\}|` +
+    `\\b${varName}\\s*=\\s*(?:list\\()?set\\(`
+  ).test(code);
+
+  // 2. list1 = model.by_type("A") + model.by_type("B") (+ more terms): concatenating the LISTS
+  //    still counts every element of the subtype twice, unless the variable is de-duplicated later.
+  const concatChain = /model\.by_type\(\s*["']\w+["']\s*\)(?:\s*\+\s*model\.by_type\(\s*["']\w+["']\s*\))+/g;
+  for (const chain of code.match(concatChain) || []) {
+    const types = [...chain.matchAll(/by_type\(\s*["'](\w+)["']/g)].map(m => m[1]);
+    const before = code.slice(0, code.indexOf(chain));
+    const assignedTo = before.match(/(\w+)\s*=\s*$/);
+    if (assignedTo && isDeduped(assignedTo[1])) continue;
+    if (!assignedTo && /\bset\(\s*$/.test(before)) continue; // len(set(by_type(A) + by_type(B)))
+    for (let i = 0; i < types.length; i++) {
+      for (let j = i + 1; j < types.length; j++) {
+        const pair = pairOf(types[i], types[j]);
+        if (pair) return pair;
+      }
+    }
+  }
+
+  // 3. var = model.by_type("A") ... var.extend(model.by_type("B")) / var += model.by_type("B")
+  for (const [, varName, a] of code.matchAll(/(\w+)\s*=\s*model\.by_type\(\s*["'](\w+)["']\s*\)/g)) {
+    if (isDeduped(varName)) continue;
+    const growRe = new RegExp(
+      `\\b${varName}\\s*(?:\\.extend\\(\\s*model\\.by_type\\(\\s*["'](\\w+)["']\\s*\\)\\s*\\)|` +
+      `\\+=\\s*model\\.by_type\\(\\s*["'](\\w+)["']\\s*\\))`
+    );
+    const grow = code.match(growRe);
+    if (!grow) continue;
+    const pair = pairOf(a, grow[1] || grow[2]);
+    if (pair) return pair;
+  }
+
   return null;
 }
 
@@ -353,6 +398,14 @@ export function explainError(message, code) {
       "do not call .get() on it again."],
     [/has no attribute '(get_psets|material_names|storey_names|openings|fillings|elements_in|duplicate_guids)'/.test(message),
       "get_psets and the helpers are functions, not methods of an element: write get_psets(e), not e.get_psets()."],
+    [/entity instance of type '[\w.]+' has no attribute '(Pset_|Qto_)\w+'/.test(message),
+      'a property/quantity set is not an attribute of the element: read it with get_psets(e).get("<set name>", {}).get("<property>"), ' +
+      "never e.Pset_... or e.Qto_..."],
+    [/entity instance of type '[\w.]+' has no attribute '\w+'/.test(message),
+      "that is not a real attribute of this element: its own attributes are only things like .Name, .GlobalId, " +
+      ".Description, .ObjectType, .PredefinedType, .Tag. A relationship (storey, material, openings, fillings) is " +
+      "never an attribute: use the helper for it (storey_names, material_names, openings, fillings, elements_in), " +
+      "and a property/quantity with get_psets(e).get(\"<set name>\", {}).get(\"<property>\")."],
     [/__import__ not found/.test(message),
       "do not import anything: Counter, the helpers (material_names, elements_in, ...) and model already exist."],
     [/'str' object has no attribute/.test(message),

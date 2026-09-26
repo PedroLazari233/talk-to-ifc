@@ -17,6 +17,13 @@ examples = [
             "how many walls are in the model?",
             "give me the number of elements of a type",
             "count all elements of a type",
+            # infra/MEP nouns are not in the normalizer's word list (only building elements are), so a
+            # question using them scores low against the generic wording above unless one of these
+            # matches it almost verbatim: bridges, pipe segments, ducts, roads, pavement courses...
+            "how many bridges are there?",
+            "how many pipe segments are there?",
+            "how many ducts are there?",
+            "how many pavement courses are there?",
         ],
         "code": 'result = len(model.by_type("IfcDoor"))'
     },
@@ -45,11 +52,28 @@ result = [e.Name for e in matching]'''
         "descriptions": [
             "are there any duplicated GUIDs?",
             "do two elements have the same GlobalId?",
+            "is there a duplicate GlobalId in the file?",
+            "check whether any GlobalId is duplicated",
+        ],
+        "code": 'result = len(duplicate_guids()) > 0  # duplicate_guids(): GlobalIds used by more than one entity'
+    },
+    {
+        "descriptions": [
             "which GUIDs are duplicated?",
             "list the duplicate GlobalIds and how many there are",
         ],
         "code": '''duplicated = duplicate_guids()  # GlobalIds used by more than one entity
 result = {"count": len(duplicated), "guids": duplicated}'''
+    },
+    {
+        "descriptions": [
+            "does the building have a name?",
+            "does the project have a name?",
+            "is there a name for this element?",
+            "check whether the building has a name",
+        ],
+        "code": '''buildings = model.by_type("IfcBuilding")  # the same for a project: model.by_type("IfcProject")
+result = bool(buildings and buildings[0].Name)'''
     },
     {
         "descriptions": [
@@ -138,6 +162,10 @@ result = {"IfcDoor": doors, "IfcWindow": windows, "more": more}'''
             "check if there is a stair in the model",
             "are there any elements of a type?",
             "does an element of a given type exist in the file?",
+            "are there any pipe segments?",
+            "is there a duct in the model?",
+            "does the model contain a bridge?",
+            "is there any road in the file?",
         ],
         "code": 'result = len(model.by_type("IfcWindow")) > 0'
     },
@@ -147,8 +175,20 @@ result = {"IfcDoor": doors, "IfcWindow": windows, "more": more}'''
             "count elements of a type filtered by property value",
             "how many elements have a property equal to a specific value?",
         ],
-        "code": '''elements = model.by_type("IfcWall")
+        "code": '''elements = model.by_type("IfcWall")  # by_type already includes subtypes (IfcWallStandardCase...) - never add them again
 matching = [e for e in elements if get_psets(e).get("Pset_WallCommon", {}).get("FireRating") == "A60"]
+result = len(matching)'''
+    },
+    {
+        "descriptions": [
+            "how many elements have a word in a text property?",
+            "which elements have a property value that contains a given text?",
+            "how many elements have a specific word in a property?",
+            "count elements whose property text includes a substring",
+            "which elements have a property that mentions a word?",
+        ],
+        "code": '''elements = model.by_type("IfcWall")
+matching = [e for e in elements if "Exterior" in (get_psets(e).get("Pset_WallCommon", {}).get("Reference") or "")]
 result = len(matching)'''
     },
     {
@@ -251,6 +291,15 @@ result = counts'''
         "code": '''# attributes are read directly from the element (they are not in get_psets):
 # e.Description, e.ObjectType, e.PredefinedType, e.Tag, and e.Elevation for storeys
 result = [e.Description for e in model.by_type("IfcWall")]'''
+    },
+    {
+        "descriptions": [
+            "what is the description of THE chimney?",  # "the X": one specific element, not a list of every X
+            "what is the object type of the footing?",
+            "what is the predefined type of the terminal?",
+        ],
+        "code": '''elements = model.by_type("IfcChimney")  # use the type the question names
+result = elements[0].Description if elements else None  # one value, not a list: only one element is asked for'''
     },
     {
         "descriptions": [
