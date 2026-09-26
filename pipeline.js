@@ -75,8 +75,11 @@ export async function loadModel(ifcPath) {
 // So the detail is reduced step by step until the text fits.
 const SUMMARY_MAX_CHARS = 8000;   // about 2,000 tokens
 const MAX_PROPS_PER_SET = 12;
-// Pset_WallCommon, Qto_WallBaseQuantities... (case-sensitive: Revit's own sets are called "PSet_Revit_...")
-const isStandardSet = name => /^(Pset_|Qto_)/.test(name);
+// Pset_WallCommon, Qto_WallBaseQuantities... (case-sensitive: Revit's own sets are called "PSet_Revit_...",
+// and are mostly clutter - EXCEPT "PSet_Revit_Dimensions", which is where a Revit export puts its actual
+// Area/Length/Volume numbers instead of the standard Qto_ sets; hiding it left "total area of the walls"
+// with no property to read, so the LLM guessed a text field (Reference) instead)
+const isStandardSet = name => /^(Pset_|Qto_)/.test(name) || name === "PSet_Revit_Dimensions";
 
 // detail: "all"      -> every set with (up to 12) property names
 //         "standard" -> property names only for Pset_/Qto_ sets, the other set names on one line

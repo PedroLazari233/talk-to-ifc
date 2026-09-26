@@ -207,6 +207,24 @@
    "compare": "auto"
   },
   {
+   "id": "duplex-wall-area-vague",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the total area of all the walls?",
+   "reference_code": "result = sum(get_psets(w).get(\"PSet_Revit_Dimensions\", {}).get(\"Area\", 0) for w in model.by_type(\"IfcWall\"))",
+   "expected": 587.6854224000202,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-slab-area-vague",
+   "ifc_file": "Duplex.ifc",
+   "category": "aggregate",
+   "question": "What is the total area of all the slabs?",
+   "reference_code": "result = sum(get_psets(s).get(\"PSet_Revit_Dimensions\", {}).get(\"Area\", 0) for s in model.by_type(\"IfcSlab\"))",
+   "expected": 540.9192233405449,
+   "compare": "number"
+  },
+  {
    "id": "duplex-guid-door-name",
    "ifc_file": "Duplex.ifc",
    "category": "by_guid",
