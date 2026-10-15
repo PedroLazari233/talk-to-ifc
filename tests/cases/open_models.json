@@ -11,51 +11,6 @@
  ],
  "cases": [
   {
-   "id": "duplex-count-doors",
-   "ifc_file": "Duplex.ifc",
-   "category": "count",
-   "question": "How many doors are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
-   "expected": 14,
-   "compare": "number"
-  },
-  {
-   "id": "duplex-count-windows",
-   "ifc_file": "Duplex.ifc",
-   "category": "count",
-   "question": "How many windows does the building have?",
-   "reference_code": "result = len(model.by_type(\"IfcWindow\"))",
-   "expected": 24,
-   "compare": "number"
-  },
-  {
-   "id": "duplex-count-walls",
-   "ifc_file": "Duplex.ifc",
-   "category": "count",
-   "question": "How many walls are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
-   "expected": 57,
-   "compare": "number"
-  },
-  {
-   "id": "duplex-count-spaces",
-   "ifc_file": "Duplex.ifc",
-   "category": "count",
-   "question": "How many rooms (IfcSpace) are there?",
-   "reference_code": "result = len(model.by_type(\"IfcSpace\"))",
-   "expected": 21,
-   "compare": "number"
-  },
-  {
-   "id": "duplex-count-furniture",
-   "ifc_file": "Duplex.ifc",
-   "category": "count",
-   "question": "How many pieces of furniture are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcFurnishingElement\"))",
-   "expected": 61,
-   "compare": "number"
-  },
-  {
    "id": "duplex-count-openings",
    "ifc_file": "Duplex.ifc",
    "category": "count",
@@ -621,6 +576,51 @@
    "compare": "number"
   },
   {
+   "id": "duplex-countphr-imperative-walls",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "Count the walls in this model.",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 57,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-countphr-total-doors",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "What is the total number of doors?",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
+   "expected": 14,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-countphr-shorthand-windows",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "window count?",
+   "reference_code": "result = len(model.by_type(\"IfcWindow\"))",
+   "expected": 24,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-countphr-amount-furniture",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How much furniture is there?",
+   "reference_code": "result = len(model.by_type(\"IfcFurnishingElement\"))",
+   "expected": 61,
+   "compare": "number"
+  },
+  {
+   "id": "duplex-countphr-synonym-rooms",
+   "ifc_file": "Duplex.ifc",
+   "category": "count",
+   "question": "How many rooms are in the house?",
+   "reference_code": "result = len(model.by_type(\"IfcSpace\"))",
+   "expected": 21,
+   "compare": "number"
+  },
+  {
    "id": "duplex-refuse-delete",
    "ifc_file": "Duplex.ifc",
    "category": "out_of_scope",
@@ -640,24 +640,6 @@
    "category": "out_of_scope",
    "question": "tell me a joke about architects",
    "expect_refusal": true
-  },
-  {
-   "id": "arch-count-walls",
-   "ifc_file": "Building-Architecture.ifc",
-   "category": "count",
-   "question": "How many walls are there?",
-   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
-   "expected": 4,
-   "compare": "number"
-  },
-  {
-   "id": "arch-count-slabs",
-   "ifc_file": "Building-Architecture.ifc",
-   "category": "count",
-   "question": "How many slabs are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcSlab\"))",
-   "expected": 3,
-   "compare": "number"
   },
   {
    "id": "arch-count-sites",
@@ -912,29 +894,29 @@
    "compare": "number"
   },
   {
+   "id": "arch-countphr-shorthand-slabs",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "Slabs: how many?",
+   "reference_code": "result = len(model.by_type(\"IfcSlab\"))",
+   "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "arch-countphr-scope-walls",
+   "ifc_file": "Building-Architecture.ifc",
+   "category": "count",
+   "question": "Across the whole model, how many walls exist?",
+   "reference_code": "result = len(model.by_type(\"IfcWall\"))",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
    "id": "arch-refuse-rename",
    "ifc_file": "Building-Architecture.ifc",
    "category": "out_of_scope",
    "question": "rename the storey 00 groundfloor to Ground Floor",
    "expect_refusal": true
-  },
-  {
-   "id": "struct-count-beams",
-   "ifc_file": "Building-Structural.ifc",
-   "category": "count",
-   "question": "How many beams are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcBeam\"))",
-   "expected": 6,
-   "compare": "number"
-  },
-  {
-   "id": "struct-count-footings",
-   "ifc_file": "Building-Structural.ifc",
-   "category": "count",
-   "question": "How many footings are there?",
-   "reference_code": "result = len(model.by_type(\"IfcFooting\"))",
-   "expected": 1,
-   "compare": "number"
   },
   {
    "id": "struct-exists-columns",
@@ -1061,12 +1043,21 @@
    "compare": "number"
   },
   {
-   "id": "hvac-count-terminals",
-   "ifc_file": "Building-Hvac.ifc",
+   "id": "struct-countphr-number-beams",
+   "ifc_file": "Building-Structural.ifc",
    "category": "count",
-   "question": "How many air terminals are there?",
-   "reference_code": "result = len(model.by_type(\"IfcAirTerminal\"))",
-   "expected": 2,
+   "question": "Give me the number of beams.",
+   "reference_code": "result = len(model.by_type(\"IfcBeam\"))",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "struct-countphr-indirect-footings",
+   "ifc_file": "Building-Structural.ifc",
+   "category": "count",
+   "question": "Could you count the footings for me?",
+   "reference_code": "result = len(model.by_type(\"IfcFooting\"))",
+   "expected": 1,
    "compare": "number"
   },
   {
@@ -1115,6 +1106,15 @@
    "question": "How many distribution elements (IfcDistributionElement) are in the model?",
    "reference_code": "result = len(model.by_type(\"IfcDistributionElement\"))",
    "expected": 3,
+   "compare": "number"
+  },
+  {
+   "id": "hvac-countphr-indirect-terminals",
+   "ifc_file": "Building-Hvac.ifc",
+   "category": "count",
+   "question": "I'd like to know how many air terminals were modelled.",
+   "reference_code": "result = len(model.by_type(\"IfcAirTerminal\"))",
+   "expected": 2,
    "compare": "number"
   },
   {
@@ -1287,33 +1287,6 @@
    "compare": "number"
   },
   {
-   "id": "bridge-count-parts",
-   "ifc_file": "Infra-Bridge.ifc",
-   "category": "count",
-   "question": "How many bridge parts are there?",
-   "reference_code": "result = len(model.by_type(\"IfcBridgePart\"))",
-   "expected": 18,
-   "compare": "number"
-  },
-  {
-   "id": "bridge-count-signs",
-   "ifc_file": "Infra-Bridge.ifc",
-   "category": "count",
-   "question": "How many signs are there?",
-   "reference_code": "result = len(model.by_type(\"IfcSign\"))",
-   "expected": 4,
-   "compare": "number"
-  },
-  {
-   "id": "bridge-count-sites",
-   "ifc_file": "Infra-Bridge.ifc",
-   "category": "count",
-   "question": "How many sites are there?",
-   "reference_code": "result = len(model.by_type(\"IfcSite\"))",
-   "expected": 6,
-   "compare": "number"
-  },
-  {
    "id": "bridge-bridge-names",
    "ifc_file": "Infra-Bridge.ifc",
    "category": "list",
@@ -1411,19 +1384,46 @@
    "compare": "number"
   },
   {
-   "id": "road-count-parts",
+   "id": "bridge-countphr-shorthand-signs",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "What's the sign count for this bridge model?",
+   "reference_code": "result = len(model.by_type(\"IfcSign\"))",
+   "expected": 4,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-countphr-indirect-parts",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "Can you tell me how many bridge parts this file contains?",
+   "reference_code": "result = len(model.by_type(\"IfcBridgePart\"))",
+   "expected": 18,
+   "compare": "number"
+  },
+  {
+   "id": "bridge-countphr-scope-sites",
+   "ifc_file": "Infra-Bridge.ifc",
+   "category": "count",
+   "question": "In total, how many sites are defined in the file?",
+   "reference_code": "result = len(model.by_type(\"IfcSite\"))",
+   "expected": 6,
+   "compare": "number"
+  },
+  {
+   "id": "road-countphr-total-parts",
    "ifc_file": "Infra-Road.ifc",
    "category": "count",
-   "question": "How many road parts (IfcRoadPart) are there?",
+   "question": "Total road parts in this file?",
    "reference_code": "result = len(model.by_type(\"IfcRoadPart\"))",
    "expected": 26,
    "compare": "number"
   },
   {
-   "id": "road-count-courses",
+   "id": "road-countphr-synonym-layers",
    "ifc_file": "Infra-Road.ifc",
    "category": "count",
-   "question": "How many pavement courses (IfcCourse) are in the model?",
+   "question": "How many pavement layers are modelled in the road?",
    "reference_code": "result = len(model.by_type(\"IfcCourse\"))",
    "expected": 16,
    "compare": "number"
@@ -1499,39 +1499,12 @@
    }
   },
   {
-   "id": "schep-count-doors",
-   "ifc_file": "Schependomlaan.ifc",
-   "category": "count",
-   "question": "How many doors are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
-   "expected": 205,
-   "compare": "number"
-  },
-  {
    "id": "schep-count-walls",
    "ifc_file": "Schependomlaan.ifc",
    "category": "count",
    "question": "How many walls are there?",
    "reference_code": "result = len(model.by_type(\"IfcWall\"))",
    "expected": 880,
-   "compare": "number"
-  },
-  {
-   "id": "schep-count-coverings",
-   "ifc_file": "Schependomlaan.ifc",
-   "category": "count",
-   "question": "How many coverings are in the model?",
-   "reference_code": "result = len(model.by_type(\"IfcCovering\"))",
-   "expected": 1214,
-   "compare": "number"
-  },
-  {
-   "id": "schep-count-stairs",
-   "ifc_file": "Schependomlaan.ifc",
-   "category": "count",
-   "question": "How many stairs are there?",
-   "reference_code": "result = len(model.by_type(\"IfcStair\"))",
-   "expected": 9,
    "compare": "number"
   },
   {
@@ -1562,12 +1535,48 @@
    "compare": "auto"
   },
   {
-   "id": "schep-storeys",
+   "id": "schep-countphr-imperative-stairs",
    "ifc_file": "Schependomlaan.ifc",
    "category": "count",
-   "question": "How many building storeys are there?",
+   "question": "Count every stair in the building, please.",
+   "reference_code": "result = len(model.by_type(\"IfcStair\"))",
+   "expected": 9,
+   "compare": "number"
+  },
+  {
+   "id": "schep-countphr-quantity-coverings",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "What is the quantity of coverings in the model?",
+   "reference_code": "result = len(model.by_type(\"IfcCovering\"))",
+   "expected": 1214,
+   "compare": "number"
+  },
+  {
+   "id": "schep-countphr-synonym-levels",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "How many levels does the building have?",
    "reference_code": "result = len(model.by_type(\"IfcBuildingStorey\"))",
    "expected": 1,
+   "compare": "number"
+  },
+  {
+   "id": "schep-countphr-synonym-staircases",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "Number of staircases?",
+   "reference_code": "result = len(model.by_type(\"IfcStair\"))",
+   "expected": 9,
+   "compare": "number"
+  },
+  {
+   "id": "schep-countphr-scope-doors",
+   "ifc_file": "Schependomlaan.ifc",
+   "category": "count",
+   "question": "Count all the doors on every floor, in total.",
+   "reference_code": "result = len(model.by_type(\"IfcDoor\"))",
+   "expected": 205,
    "compare": "number"
   },
   {
