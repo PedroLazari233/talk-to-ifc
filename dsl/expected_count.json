@@ -1,0 +1,290 @@
+{
+  "duplex-count-openings": {
+    "question": "How many opening elements are in the model?",
+    "dsl": {
+      "select": "IfcOpeningElement",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-messy-windows": {
+    "question": "how many windos does this hous have",
+    "dsl": {
+      "select": "IfcWindow",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-messy-dors": {
+    "question": "number of dors pls",
+    "dsl": {
+      "select": "IfcDoor",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-countphr-imperative-walls": {
+    "question": "Count the walls in this model.",
+    "dsl": {
+      "select": "IfcWall",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-countphr-total-doors": {
+    "question": "What is the total number of doors?",
+    "dsl": {
+      "select": "IfcDoor",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-countphr-shorthand-windows": {
+    "question": "window count?",
+    "dsl": {
+      "select": "IfcWindow",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-countphr-amount-furniture": {
+    "question": "How much furniture is there?",
+    "dsl": {
+      "select": "IfcFurnishingElement",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "duplex-countphr-synonym-rooms": {
+    "question": "How many rooms are in the house?",
+    "dsl": {
+      "select": "IfcSpace",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "arch-count-sites": {
+    "question": "How many sites does the file have?",
+    "dsl": {
+      "select": "IfcSite",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "arch-count-zones": {
+    "question": "How many spatial zones (IfcSpatialZone) are there?",
+    "dsl": {
+      "select": "IfcSpatialZone",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "arch-messy-walls": {
+    "question": "how many wals in this model",
+    "dsl": {
+      "select": "IfcWall",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "arch-countphr-shorthand-slabs": {
+    "question": "Slabs: how many?",
+    "dsl": {
+      "select": "IfcSlab",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "arch-countphr-scope-walls": {
+    "question": "Across the whole model, how many walls exist?",
+    "dsl": {
+      "select": "IfcWall",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "struct-messy-beams": {
+    "question": "hw many beems r there",
+    "dsl": {
+      "select": "IfcBeam",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "struct-countphr-number-beams": {
+    "question": "Give me the number of beams.",
+    "dsl": {
+      "select": "IfcBeam",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "struct-countphr-indirect-footings": {
+    "question": "Could you count the footings for me?",
+    "dsl": {
+      "select": "IfcFooting",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "hvac-distribution-count": {
+    "question": "How many distribution elements (IfcDistributionElement) are in the model?",
+    "dsl": {
+      "select": "IfcDistributionElement",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "hvac-countphr-indirect-terminals": {
+    "question": "I'd like to know how many air terminals were modelled.",
+    "dsl": {
+      "select": "IfcAirTerminal",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "ww-count-elements": {
+    "question": "How many elements (IfcElement) are in the model?",
+    "dsl": {
+      "select": "IfcElement",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "bridge-count-bridges": {
+    "question": "How many bridges are in the model?",
+    "dsl": {
+      "select": "IfcBridge",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "bridge-messy": {
+    "question": "how many briges r in this file",
+    "dsl": {
+      "select": "IfcBridge",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "bridge-countphr-shorthand-signs": {
+    "question": "What's the sign count for this bridge model?",
+    "dsl": {
+      "select": "IfcSign",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "bridge-countphr-indirect-parts": {
+    "question": "Can you tell me how many bridge parts this file contains?",
+    "dsl": {
+      "select": "IfcBridgePart",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "bridge-countphr-scope-sites": {
+    "question": "In total, how many sites are defined in the file?",
+    "dsl": {
+      "select": "IfcSite",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "road-countphr-total-parts": {
+    "question": "Total road parts in this file?",
+    "dsl": {
+      "select": "IfcRoadPart",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "road-countphr-synonym-layers": {
+    "question": "How many pavement layers are modelled in the road?",
+    "dsl": {
+      "select": "IfcCourse",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-count-walls": {
+    "question": "How many walls are there?",
+    "dsl": {
+      "select": "IfcWall",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-countphr-imperative-stairs": {
+    "question": "Count every stair in the building, please.",
+    "dsl": {
+      "select": "IfcStair",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-countphr-quantity-coverings": {
+    "question": "What is the quantity of coverings in the model?",
+    "dsl": {
+      "select": "IfcCovering",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-countphr-synonym-levels": {
+    "question": "How many levels does the building have?",
+    "dsl": {
+      "select": "IfcBuildingStorey",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-countphr-synonym-staircases": {
+    "question": "Number of staircases?",
+    "dsl": {
+      "select": "IfcStair",
+      "return": {
+        "op": "count"
+      }
+    }
+  },
+  "schep-countphr-scope-doors": {
+    "question": "Count all the doors on every floor, in total.",
+    "dsl": {
+      "select": "IfcDoor",
+      "return": {
+        "op": "count"
+      }
+    }
+  }
+}
